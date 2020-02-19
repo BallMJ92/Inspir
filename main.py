@@ -6,6 +6,11 @@ class Quotes:
     def __init__(self):
         self.saved_quotes = []
 
+    def export(self, quotes):
+        with open("quotes.txt", "a") as output:
+            output.write(str(quotes))
+            output.close()
+
     def main(self):
 
         while True:
@@ -17,6 +22,9 @@ class Quotes:
                 if save == "y":
                     self.saved_quotes.append(quote)
                     print(self.saved_quotes)
+                    export = input(str("Export saved quotes? (y)/(n): "))
+                    if export == "y":
+                        self.export(self.saved_quotes)
             elif start == "n":
                 print("Exiting...")
                 break
