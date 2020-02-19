@@ -1,10 +1,11 @@
 import wikiquotes
 import os.path
-#from random import randrange
+from random import randrange
 
 class Quotes:
 
     def __init__(self):
+        self.authors = []
         self.saved_quotes = []
         self.filename = ""
 
@@ -15,28 +16,36 @@ class Quotes:
             filename = filename
         else:
             filename = filename+".txt"
-        
-        if os.path.isfile(filename) == True:
-            with open(filename, "a") as output:
-                output.write(str(quotes))
-                output.close()
-        elif os.path.isfile(filename) == False:
-            with open(filename, "w") as output:
-                output.write(str(quotes))
-                output.close()
-        else:
-            return False
+
+            
+        with open(filename, "w") as output:
+            output.write(str(quotes))
+            output.close()
 
     def main(self):
-
+        
         while True:
-            start = input(str("Retrieve new quote (y)/(n): "))
-            if start == "y":
-                quote = wikiquotes.random_quote("Marcus Aurelius", "english")
-                print(quote)
+            author = input(str("Who are your favourite quote authors? "))
+            if len(author) != 0:
+                self.authors.append(author)
+                cont = input(str("Do you want to add any more authors (y)/(n): "))
+                if cont == "n":
+                    break
+            else:
+                print("Sorry I didn't catch that..")
+
+        print("\nLets move onto getting some quotes..\n")
+        
+             
+        while True:
+            rand_author = self.authors[randrange(len(self.authors))]
+            ret_quote = input(str("Retrieve new quote (y)/(n): "))
+            if ret_quote == "y":
+                quote = wikiquotes.random_quote(rand_author, "english")
+                print(rand_author+" : "+quote)
                 save = input(str("Save quote? (y)/(n): "))
                 if save == "y":
-                    self.saved_quotes.append(quote)
+                    self.saved_quotes.append(rand_author+" : "+quote)
                     print(self.saved_quotes)
                     export = input(str("Export saved quotes? (y)/(n): "))
                     if export == "y":
@@ -45,7 +54,7 @@ class Quotes:
                             self.export(self.saved_quotes, self.filename)
                         else:
                             self.export(self.saved_quotes, self.filename)
-            elif start == "n":
+            elif ret_quote == "n":
                 print("Exiting...")
                 break
             else:
