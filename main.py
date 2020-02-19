@@ -1,20 +1,36 @@
 import wikiquotes
+import os.path
 #from random import randrange
 
 class Quotes:
 
     def __init__(self):
         self.saved_quotes = []
+        self.filename = ""
 
-    def export(self, quotes):
-        with open("quotes.txt", "a") as output:
-            output.write(str(quotes))
-            output.close()
+    def export(self, quotes, filename):
+        #fname = filename
+        
+        if filename[-4:] == ".txt":
+            filename = filename
+        else:
+            filename = filename+".txt"
+        
+        if os.path.isfile(filename) == True:
+            with open(filename, "a") as output:
+                output.write(str(quotes))
+                output.close()
+        elif os.path.isfile(filename) == False:
+            with open(filename, "w") as output:
+                output.write(str(quotes))
+                output.close()
+        else:
+            return False
 
     def main(self):
 
         while True:
-            start =input(str("Retrieve new quote (y)/(n): "))
+            start = input(str("Retrieve new quote (y)/(n): "))
             if start == "y":
                 quote = wikiquotes.random_quote("Marcus Aurelius", "english")
                 print(quote)
@@ -24,7 +40,11 @@ class Quotes:
                     print(self.saved_quotes)
                     export = input(str("Export saved quotes? (y)/(n): "))
                     if export == "y":
-                        self.export(self.saved_quotes)
+                        if self.filename == "":
+                            self.filename = input(str("Enter filename: "))
+                            self.export(self.saved_quotes, self.filename)
+                        else:
+                            self.export(self.saved_quotes, self.filename)
             elif start == "n":
                 print("Exiting...")
                 break
